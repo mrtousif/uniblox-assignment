@@ -1,3 +1,4 @@
+import { Order } from './orders/entities/order.entity';
 import { Product } from './products/entities/product.entity';
 
 export const Products: Product[] = [
@@ -62,3 +63,19 @@ export const Products: Product[] = [
     price: 799.99,
   },
 ];
+
+export const Orders: Order[] = [];
+
+type DiscountCode = {
+  type: 'percentage' | 'fixed';
+  amount: number;
+  nthOrder: number;
+  isActive: boolean;
+};
+
+export type DiscountCodesT = {
+  [code: string]: DiscountCode;
+};
+
+export const DiscountCodes: DiscountCodesT = {};
+export const UsedDiscountCodes = [];
