@@ -1,6 +1,7 @@
 import { GetStaticProps, InferGetStaticPropsType } from 'next/types';
 import Home, { Product } from '../components/Home/Home';
-import styles from './index.module.css';
+import AppLayout from '../components/Layout/Layout';
+
 
 export function Index({
   products,
@@ -10,7 +11,11 @@ export function Index({
    *
    * Note: The corresponding styles are in the ./index.css file.
    */
-  return <Home products={products} />;
+  return (
+    <AppLayout>
+      <Home products={products} />;
+    </AppLayout>
+  );
 }
 
 export const getStaticProps = (async (context) => {
