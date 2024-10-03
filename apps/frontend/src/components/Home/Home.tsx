@@ -1,5 +1,5 @@
 import ProductCard from '../ProductCard/ProductCard';
-import { Col, Divider, Row } from 'antd';
+import { Col, notification, Row } from 'antd';
 
 export interface Product {
   id: string;
@@ -8,24 +8,32 @@ export interface Product {
   price: number;
 }
 
+export type NotificationType = 'success' | 'info' | 'warning' | 'error';
+
 interface Props {
   products: Product[];
 }
 export function Home({ products }: Props) {
+  const [api, contextHolder] = notification.useNotification();
+
+  const openNotificationWithIcon = (
+    type: NotificationType,
+    message: string
+  ) => {
+    api[type]({
+      message,
+    });
+  };
+
   return (
     <div>
+      {contextHolder}
       <Row>
         {products.map((product) => (
-          <Col
-            className="gutter-row"
-            span={4}
-            key={product.name + product.price}
-          >
+          <Col className="gutter-row" span={4} key={product.id}>
             <ProductCard
-              name={product.name}
-              stockQty={product.stockQty}
-              price={product.price}
-              description=""
+              product={product}
+              openNotificationWithIcon={openNotificationWithIcon}
             />
           </Col>
         ))}

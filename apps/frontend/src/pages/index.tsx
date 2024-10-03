@@ -6,11 +6,6 @@ import AppLayout from '../components/Layout/Layout';
 export function Index({
   products,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  /*
-   * Replace the elements below with your own.
-   *
-   * Note: The corresponding styles are in the ./index.css file.
-   */
   return (
     <AppLayout>
       <Home products={products} />;

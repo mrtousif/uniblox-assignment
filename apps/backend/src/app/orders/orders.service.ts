@@ -48,6 +48,7 @@ export class OrdersService {
           productId: product.id,
           price: product.price,
           quantity: createOrderDto.quantity,
+          name: product.name,
         });
         Orders[existingOrderIdx].totalPrice +=
           product.price * createOrderDto.quantity;
@@ -65,6 +66,7 @@ export class OrdersService {
             price: product.price,
             productId: product.id,
             quantity: createOrderDto.quantity,
+            name: product.name,
           },
         ],
       });
