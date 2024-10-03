@@ -8,7 +8,7 @@ import {
   Delete,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
-import { CreateOrderDto } from './dto/create-order.dto';
+import { CheckoutDTO, CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 
 @Controller('orders')
@@ -28,13 +28,8 @@ export class OrdersController {
     return this.ordersService.findAll();
   }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.ordersService.findOne(id);
-  // }
-
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
-  //   return this.ordersService.update(id, updateOrderDto);
-  // }
+  @Post('/checkout')
+  checkout(@Body() checkoutDto: CheckoutDTO) {
+    return this.ordersService.checkout(checkoutDto);
+  }
 }

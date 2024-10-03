@@ -77,5 +77,12 @@ export type DiscountCodesT = {
   [code: string]: DiscountCode;
 };
 
-export const DiscountCodes: DiscountCodesT = {};
+export const DiscountCodes: DiscountCodesT = {
+  '10POFF': {
+    amount: 10,
+    type: 'percentage',
+    isActive: true,
+    nthOrder: 2,
+  },
+};
 export const UsedDiscountCodes = [];

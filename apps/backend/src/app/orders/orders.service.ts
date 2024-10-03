@@ -3,9 +3,10 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateOrderDto } from './dto/create-order.dto';
+import { CheckoutDTO, CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
-import { Orders, Products } from '../db';
+import { DiscountCodes, Orders, Products } from '../db';
+import { Order } from './entities/order.entity';
 
 @Injectable()
 export class OrdersService {
@@ -42,7 +43,7 @@ export class OrdersService {
         });
         Orders[existingOrderIdx].totalPrice = price;
       } else {
-        // create new order
+        // add new order item
         Orders[existingOrderIdx].items.push({
           productId: product.id,
           price: product.price,
@@ -54,7 +55,7 @@ export class OrdersService {
     } else {
       // create new order
       Orders.push({
-        id: Orders.length + 1,
+        id: `${Orders.length + 1}`,
         isActive: true,
         userId,
         totalPrice: product.price * createOrderDto.quantity,
@@ -74,11 +75,61 @@ export class OrdersService {
     );
   }
 
-  findAll() {
+  findAll(userId: string = null) {
+    if (userId) {
+      return Orders.filter((order) => order.userId === userId);
+    }
     return Orders;
   }
 
-  async applyDiscount(orderId: string, discountCode: string) {}
+  findOne(orderId: string) {
+    return Orders.find((order) => order.id === orderId);
+  }
 
-  async checkout(orderId: string) {}
+  applyDiscount(userId: string, activeOrder: Order, discountCode: string) {
+    // find discount code
+    const DiscountCode = DiscountCodes[discountCode];
+    if (!DiscountCode || DiscountCode.isActive !== true) {
+      throw new BadRequestException('Invalid discount code');
+    }
+    const orders = this.findAll(userId);
+    // orders = orders.filter((order) => order.status === 'placed' || order.status === 'delivered')
+    // check apply condition
+
+    if (orders.length % DiscountCode.nthOrder === 0) {
+      // apply discount
+      if (DiscountCode.type === 'percentage') {
+        activeOrder.discountAmount =
+          (activeOrder.totalPrice * DiscountCode.amount) / 100;
+        activeOrder.totalPrice -= activeOrder.discountAmount;
+      } else if (DiscountCode.type === 'fixed') {
+        activeOrder.discountAmount = DiscountCode.amount;
+        activeOrder.totalPrice -= activeOrder.discountAmount;
+      }
+    }
+    return activeOrder;
+  }
+
+  async checkout(checkoutDto: CheckoutDTO) {
+    const order = this.findOne(checkoutDto.orderId);
+
+    if (!order || order.isActive !== true) {
+      throw new NotFoundException(`Order ${checkoutDto.orderId} not found`);
+    }
+    let updatedOrder: Order = order;
+    if (checkoutDto.discountCode) {
+      updatedOrder = this.applyDiscount(
+        checkoutDto.userId,
+        order,
+        checkoutDto.discountCode
+      );
+    }
+    // place order
+    updatedOrder.status = 'placed';
+    updatedOrder.isActive = false;
+    const idx = Orders.findIndex((ord) => ord.id === updatedOrder.id);
+    Orders[idx] = updatedOrder;
+
+    return Orders[idx];
+  }
 }

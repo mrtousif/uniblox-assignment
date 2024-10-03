@@ -1,7 +1,7 @@
 import { OrderItem } from './order-item.entity';
 
 export class Order {
-  id: number;
+  id: string;
 
   isActive: boolean;
 
@@ -15,5 +15,5 @@ export class Order {
 
   discountAmount?: number;
 
-  status: string;
+  status: 'active' | 'placed' | 'delivered';
 }
