@@ -32,4 +32,9 @@ export class OrdersController {
   checkout(@Body() checkoutDto: CheckoutDTO) {
     return this.ordersService.checkout(checkoutDto);
   }
+
+  @Get('report')
+  report() {
+    return this.ordersService.report();
+  }
 }

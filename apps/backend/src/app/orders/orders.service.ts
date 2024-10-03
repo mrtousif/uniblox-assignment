@@ -100,7 +100,7 @@ export class OrdersService {
       // apply discount
       if (DiscountCode.type === 'percentage') {
         activeOrder.discountAmount =
-          (activeOrder.totalPrice * DiscountCode.amount) / 100;
+          Math.round((activeOrder.totalPrice * DiscountCode.amount) / 100);
         activeOrder.totalPrice -= activeOrder.discountAmount;
       } else if (DiscountCode.type === 'fixed') {
         activeOrder.discountAmount = DiscountCode.amount;
@@ -130,6 +130,36 @@ export class OrdersService {
     const idx = Orders.findIndex((ord) => ord.id === updatedOrder.id);
     Orders[idx] = updatedOrder;
 
+    // update stock
+
     return Orders[idx];
+  }
+
+  report() {
+    // count of items purchased
+    const purchasedOrders = Orders.filter(
+      (order) => order.status === 'placed' || order.status === 'delivered'
+    );
+    const itemsSold = purchasedOrders.map((order) => order.items).flat();
+    console.log('itemsSold', itemsSold);
+    const totalItemsSold = itemsSold.length;
+    // total purchase amount and total discount amount
+    let totalOrderAmount = 0;
+    let totalDiscountAmount = 0;
+    for (const order of purchasedOrders) {
+      totalOrderAmount += order.totalPrice;
+      if (order.discountAmount) {
+        totalDiscountAmount += order.discountAmount;
+      }
+    }
+    // list of discount codes
+    const discountCodes = Object.keys(DiscountCodes);
+
+    return {
+      discountCodes,
+      totalDiscountAmount,
+      totalOrderAmount,
+      totalItemsSold,
+    };
   }
 }
