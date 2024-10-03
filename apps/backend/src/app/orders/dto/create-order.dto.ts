@@ -9,3 +9,11 @@ export class CheckoutDTO {
   orderId: string;
   discountCode?: string;
 }
+
+
+export class CreateDiscountCodeDTO {
+  code: string;
+  amount: number;
+  type?: string;
+  nthOrder: number;
+}
