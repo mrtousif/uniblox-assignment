@@ -141,7 +141,7 @@ export class OrdersService {
       (order) => order.status === 'placed' || order.status === 'delivered'
     );
     const itemsSold = purchasedOrders.map((order) => order.items).flat();
-    console.log('itemsSold', itemsSold);
+
     const totalItemsSold = itemsSold.length;
     // total purchase amount and total discount amount
     let totalOrderAmount = 0;
