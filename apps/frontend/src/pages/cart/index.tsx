@@ -1,13 +1,9 @@
-import React from 'react';
-import {
-  GetServerSideProps,
-  GetStaticProps,
-  InferGetServerSidePropsType,
-  InferGetStaticPropsType,
-} from 'next/types';
-import { Space, Table, Tag } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Button, Space, Table, Typography } from 'antd';
 import type { TableProps } from 'antd';
 import AppLayout from '../../components/Layout/Layout';
+
+const { Title } = Typography;
 
 interface OrderItem {
   productId: string;
@@ -41,36 +37,58 @@ const columns: TableProps<OrderItem>['columns'] = [
   },
 ];
 
-const Cart = ({
-  orders,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  let orderItems = [];
-  if (orders.length > 0) {
-    orderItems = orders[0].items.map((item) => ({
-      ...item,
-      key: item.productId,
-    }));
-  }
+const Cart = () => {
+  const [order, setOrder] = useState<Order>();
+  const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
+
+  const handleClick = async () => {
+    if (!order) {
+      return;
+    }
+    const res = await fetch('http://localhost:4000/api/orders/checkout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        orderId: `${order.id}`,
+      }),
+    });
+
+    console.log(await res.json());
+  };
+
+  useEffect(() => {
+    async function fetchOrder() {
+      const res = await fetch('http://localhost:4000/api/orders/active');
+      const order: Order = await res.json();
+      if (!order.items) {
+        return;
+      }
+      console.log(order);
+      setOrder(order);
+      setOrderItems(
+        order.items.map((item) => ({
+          ...item,
+          key: item.productId,
+        }))
+      );
+    }
+
+    fetchOrder();
+  }, []);
 
   return (
     <AppLayout>
-      <Table<OrderItem> columns={columns} dataSource={orderItems} />
+      <Title level={3}>Total price: {order?.totalPrice || 0}</Title>
+      <Table<OrderItem>
+        columns={columns}
+        dataSource={orderItems}
+        pagination={false}
+        footer={() => <Button onClick={handleClick}>Checkout</Button>}
+      />
     </AppLayout>
   );
 };
-
-export const getServerSideProps = (async (context) => {
-  let orders = [];
-  try {
-    const res = await fetch('http://localhost:4000/api/orders');
-    orders = await res.json();
-  } catch (error) {
-    console.error(error);
-  }
-
-  return { props: { orders } };
-}) satisfies GetServerSideProps<{
-  orders: Order[];
-}>;
 
 export default Cart;

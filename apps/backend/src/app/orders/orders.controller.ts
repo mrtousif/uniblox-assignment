@@ -28,6 +28,11 @@ export class OrdersController {
     return this.ordersService.findAll();
   }
 
+  @Get('active')
+  activeOrder() {
+    return this.ordersService.activeOrder();
+  }
+
   @Post('/checkout')
   checkout(@Body() checkoutDto: CheckoutDTO) {
     return this.ordersService.checkout(checkoutDto);

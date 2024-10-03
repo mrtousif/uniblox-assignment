@@ -88,6 +88,12 @@ export class OrdersService {
     return Orders.find((order) => order.id === orderId);
   }
 
+  activeOrder() {
+    const order = Orders.find((order) => order.isActive === true);
+
+    return order || {};
+  }
+
   applyDiscount(userId: string, activeOrder: Order, discountCode: string) {
     // find discount code
     const DiscountCode = DiscountCodes[discountCode];
@@ -101,8 +107,9 @@ export class OrdersService {
     if (orders.length % DiscountCode.nthOrder === 0) {
       // apply discount
       if (DiscountCode.type === 'percentage') {
-        activeOrder.discountAmount =
-          Math.round((activeOrder.totalPrice * DiscountCode.amount) / 100);
+        activeOrder.discountAmount = Math.round(
+          (activeOrder.totalPrice * DiscountCode.amount) / 100
+        );
         activeOrder.totalPrice -= activeOrder.discountAmount;
       } else if (DiscountCode.type === 'fixed') {
         activeOrder.discountAmount = DiscountCode.amount;
