@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Space, Table, Typography } from 'antd';
+import { Button, Input, Space, Table, Typography } from 'antd';
 import type { TableProps } from 'antd';
 import AppLayout from '../../components/Layout/Layout';
 
@@ -40,19 +40,26 @@ const columns: TableProps<OrderItem>['columns'] = [
 const Cart = () => {
   const [order, setOrder] = useState<Order>();
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
+  const [discountCode, setDiscountCode] = useState();
 
   const handleClick = async () => {
     if (!order) {
       return;
+    }
+    const body = {
+      orderId: `${order.id}`,
+      discountCode,
+    };
+
+    if (!discountCode) {
+      delete body['discountCode'];
     }
     const res = await fetch('http://localhost:4000/api/orders/checkout', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        orderId: `${order.id}`,
-      }),
+      body: JSON.stringify(body),
     });
 
     console.log(await res.json());
@@ -85,7 +92,17 @@ const Cart = () => {
         columns={columns}
         dataSource={orderItems}
         pagination={false}
-        footer={() => <Button onClick={handleClick}>Checkout</Button>}
+        footer={() => (
+          <Space>
+            <Input
+              placeholder="Enter discount code here"
+              onChange={(e) => setDiscountCode(e.target.value)}
+            />
+            <Button type="primary" onClick={handleClick}>
+              Checkout
+            </Button>
+          </Space>
+        )}
       />
     </AppLayout>
   );
