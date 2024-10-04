@@ -18,6 +18,12 @@ export class AppService {
   }
 
   getDiscountCodes() {
-    return DiscountCodes;
+    const array = [];
+
+    for (const key in DiscountCodes) {
+      const obj = { code: key, ...DiscountCodes[key] };
+      array.push(obj);
+    }
+    return array;
   }
 }

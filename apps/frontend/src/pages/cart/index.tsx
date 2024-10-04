@@ -29,7 +29,7 @@ const columns: TableProps<OrderItem>['columns'] = [
 const Cart = () => {
   const [order, setOrder] = useState<Order>();
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
-  const [discountCode, setDiscountCode] = useState();
+  const [discountCode, setDiscountCode] = useState<string>();
 
   const handleClick = async () => {
     if (!order) {

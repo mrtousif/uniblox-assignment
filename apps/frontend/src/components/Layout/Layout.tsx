@@ -19,8 +19,8 @@ const items: ItemType<MenuItemType>[] = [
     label: <Link href="/orders">Orders</Link>,
   },
   {
-    key: 'discount',
-    label: <Link href="/discount">Discount</Link>,
+    key: 'discounts',
+    label: <Link href="/discounts">Discounts</Link>,
   },
   {
     key: 'report',
