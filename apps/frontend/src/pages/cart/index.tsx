@@ -2,22 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Button, Input, Space, Table, Typography } from 'antd';
 import type { TableProps } from 'antd';
 import AppLayout from '../../components/Layout/Layout';
+import { Order, OrderItem } from '../../types';
 
 const { Title } = Typography;
 
-interface OrderItem {
-  productId: string;
-  price: number;
-  quantity: number;
-}
 
-interface Order {
-  id: string;
-  isActive: boolean;
-  totalPrice: number;
-  status: string;
-  items: OrderItem[];
-}
 
 const columns: TableProps<OrderItem>['columns'] = [
   {
