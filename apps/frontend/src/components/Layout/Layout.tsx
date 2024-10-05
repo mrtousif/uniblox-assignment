@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Layout, Menu, theme } from 'antd';
+import { Layout, Menu, MenuProps, theme } from 'antd';
 import { ItemType, MenuItemType } from 'antd/es/menu/interface';
+import { useRouter } from 'next/router';
 
 const { Header, Content } = Layout;
 
@@ -32,6 +33,24 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+  let router = useRouter();
+  const [current, setCurrent] = useState(
+    router.pathname === '/' || router.pathname === ''
+      ? 'home'
+      : router.pathname.split('/')[1]
+  );
+
+  const onClick: MenuProps['onClick'] = (e) => {
+    setCurrent(e.key);
+  };
+
+  useEffect(() => {
+    if (router && router.pathname.length > 1) {
+      if (current !== router.pathname.split('/')[1]) {
+        setCurrent(router.pathname.split('/')[1]);
+      }
+    }
+  }, [router, current]);
 
   return (
     <Layout>
@@ -39,8 +58,9 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
         <Menu
           theme="dark"
           mode="horizontal"
-          defaultSelectedKeys={['2']}
           items={items}
+          onClick={onClick}
+          selectedKeys={[current]}
           style={{ flex: 1, minWidth: 0 }}
         />
       </Header>
