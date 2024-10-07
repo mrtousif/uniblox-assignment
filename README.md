@@ -10,7 +10,7 @@ Tech Stack:
 - Pnpm
 - NX monorepo https://nx.dev
 
-## To test the server do the followings
+## To run and test the app do the followings
 
 1. Install dependencies using pnpm
 
