@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Typography } from 'antd';
+import { Typography, Space } from 'antd';
 import AppLayout from '../../components/Layout/Layout';
 import { API_URL } from '../../contants';
 
@@ -29,19 +29,19 @@ const Index = () => {
 
   return (
     <AppLayout>
-      <Title level={3}>Total items sold: {stats?.totalItemsSold}</Title>
-      <Title level={3}>Total order amount: {stats?.totalOrderAmount}</Title>
-      <Title level={3}>
+      <Title level={4}>Total items sold: {stats?.totalItemsSold}</Title>
+      <Title level={4}>Total order amount: {stats?.totalOrderAmount}</Title>
+      <Title level={4}>
         Total discount amount: {stats?.totalDiscountAmount}
       </Title>
-      <Title level={3}>
-        Discount codes:
+      <Space direction="vertical">
+        <Title level={4}>Discount codes:</Title>
         <ul>
           {stats?.discountCodes.map((item) => (
             <li>{item}</li>
           ))}
         </ul>
-      </Title>
+      </Space>
     </AppLayout>
   );
 };
