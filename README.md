@@ -46,6 +46,10 @@ pnpm exec nx run frontend:test
 
 We have [db.ts](./apps/backend/src/app/db.ts) file as database where all the products are present.
 
+## Demo
+
 ![demo](./uniblox_demo.mp4)
+
+## Running tests
 
 ![unit_test](./unit_test.gif)
