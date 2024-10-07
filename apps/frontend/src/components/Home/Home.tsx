@@ -25,16 +25,38 @@ export function Home({ products }: Props) {
     });
   };
 
+  const handleClick = async (product: Product) => {
+    try {
+      const res = await fetch('http://localhost:4000/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          productId: product.id,
+          quantity: 1,
+        }),
+      });
+
+      if (res.status === 200 || res.status === 201) {
+        openNotificationWithIcon('success', 'Successfully added to cart');
+      } else {
+        openNotificationWithIcon('error', 'Failed to add cart');
+      }
+
+      console.log(await res.json());
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div>
       {contextHolder}
       <Row>
         {products.map((product) => (
           <Col className="gutter-row" span={4} key={product.id}>
-            <ProductCard
-              product={product}
-              openNotificationWithIcon={openNotificationWithIcon}
-            />
+            <ProductCard product={product} handleClick={handleClick} />
           </Col>
         ))}
       </Row>
