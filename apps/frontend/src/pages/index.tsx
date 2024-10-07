@@ -1,7 +1,7 @@
 import { GetStaticProps, InferGetStaticPropsType } from 'next/types';
 import Home, { Product } from '../components/Home/Home';
 import AppLayout from '../components/Layout/Layout';
-
+import { API_URL } from '../contants';
 
 export function Index({
   products,
@@ -16,7 +16,7 @@ export function Index({
 export const getStaticProps = (async (context) => {
   let products = [];
   try {
-    const res = await fetch('http://localhost:4000/api/products');
+    const res = await fetch(API_URL + '/products');
     products = await res.json();
   } catch (error) {
     console.error(error);

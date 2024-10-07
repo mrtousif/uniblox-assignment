@@ -1,3 +1,4 @@
+import { API_URL } from '../../contants';
 import ProductCard from '../ProductCard/ProductCard';
 import { Col, notification, Row } from 'antd';
 
@@ -27,7 +28,7 @@ export function Home({ products }: Props) {
 
   const handleClick = async (product: Product) => {
     try {
-      const res = await fetch('http://localhost:4000/api/orders', {
+      const res = await fetch(API_URL + '/orders', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -55,7 +56,15 @@ export function Home({ products }: Props) {
       {contextHolder}
       <Row>
         {products.map((product) => (
-          <Col className="gutter-row" span={4} key={product.id}>
+          <Col
+            className="gutter-row"
+            key={product.id}
+            xs={{ flex: '100%' }}
+            sm={{ flex: '50%' }}
+            md={{ flex: '40%' }}
+            lg={{ flex: '20%' }}
+            xl={{ flex: '10%' }}
+          >
             <ProductCard product={product} handleClick={handleClick} />
           </Col>
         ))}

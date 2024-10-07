@@ -3,6 +3,7 @@ import type { TableColumnsType } from 'antd';
 import { Table } from 'antd';
 import AppLayout from '../../components/Layout/Layout';
 import { Order } from '../../types';
+import { API_URL } from '../../contants';
 
 const columns: TableColumnsType<Order> = [
   { title: 'OrderID', dataIndex: 'id', key: 'id' },
@@ -14,7 +15,7 @@ const Index = () => {
   const [orders, setOrders] = React.useState<Order[]>([]);
   useEffect(() => {
     async function fetchOrder() {
-      const res = await fetch('http://localhost:4000/api/orders');
+      const res = await fetch(API_URL + '/orders');
       let data: Order[] = await res.json();
       if (data.length < 1) {
         return;

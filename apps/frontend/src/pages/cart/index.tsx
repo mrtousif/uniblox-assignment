@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Input, Space, Table, Typography } from 'antd';
+import { Button, Input, Space, Table, Typography, notification } from 'antd';
 import type { TableProps } from 'antd';
 import AppLayout from '../../components/Layout/Layout';
 import { Order, OrderItem } from '../../types';
+import { API_URL } from '../../contants';
 
 const { Title } = Typography;
-
-
 
 const columns: TableProps<OrderItem>['columns'] = [
   {
@@ -30,6 +29,16 @@ const Cart = () => {
   const [order, setOrder] = useState<Order>();
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
   const [discountCode, setDiscountCode] = useState<string>();
+  const [api, contextHolder] = notification.useNotification();
+
+  const openNotificationWithIcon = (
+    type: 'success' | 'info' | 'warning' | 'error',
+    message: string
+  ) => {
+    api[type]({
+      message,
+    });
+  };
 
   const handleClick = async () => {
     if (!order) {
@@ -43,7 +52,7 @@ const Cart = () => {
     if (!discountCode) {
       delete body['discountCode'];
     }
-    const res = await fetch('http://localhost:4000/api/orders/checkout', {
+    const res = await fetch(API_URL + '/orders/checkout', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -51,17 +60,21 @@ const Cart = () => {
       body: JSON.stringify(body),
     });
 
-    console.log(await res.json());
+    if (res.status === 200 || res.status === 201) {
+      openNotificationWithIcon('success', 'Order placed');
+    } else {
+      openNotificationWithIcon('error', 'Failed to place order');
+    }
   };
 
   useEffect(() => {
     async function fetchOrder() {
-      const res = await fetch('http://localhost:4000/api/orders/active');
+      const res = await fetch(API_URL + '/orders/active');
       const order: Order = await res.json();
       if (!order.items) {
         return;
       }
-      console.log(order);
+
       setOrder(order);
       setOrderItems(
         order.items.map((item) => ({
@@ -76,6 +89,7 @@ const Cart = () => {
 
   return (
     <AppLayout>
+      {contextHolder}
       <Title level={3}>Total price: {order?.totalPrice || 0}</Title>
       <Table<OrderItem>
         columns={columns}

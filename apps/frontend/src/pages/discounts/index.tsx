@@ -6,6 +6,7 @@ import AppLayout from '../../components/Layout/Layout';
 import DiscountForm, {
   FieldType,
 } from '../../components/DiscountForm/DiscountForm';
+import { API_URL } from '../../contants';
 
 const { Title } = Typography;
 
@@ -41,7 +42,7 @@ const Index = () => {
 
   useEffect(() => {
     async function fetchDiscountCodes() {
-      const res = await fetch('http://localhost:4000/api/discount-codes');
+      const res = await fetch(API_URL + '/discount-codes');
       let data: DiscountCode[] = await res.json();
       if (data.length < 1) {
         return;
@@ -56,7 +57,7 @@ const Index = () => {
   const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
     console.log('Success:', values);
     try {
-      const res = await fetch('http://localhost:4000/api/discount-codes', {
+      const res = await fetch(API_URL + '/discount-codes', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

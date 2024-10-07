@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Typography } from 'antd';
 import AppLayout from '../../components/Layout/Layout';
+import { API_URL } from '../../contants';
 
 const { Title } = Typography;
 interface Stats {
@@ -13,8 +14,9 @@ interface Stats {
 const Index = () => {
   const [stats, setStats] = React.useState<Stats>();
   useEffect(() => {
+    console.log(API_URL);
     async function fetchReport() {
-      const res = await fetch('http://localhost:4000/api/orders/report');
+      const res = await fetch(API_URL + '/orders/report');
       let data: Stats = await res.json();
       if (Object.keys(data).length < 1) {
         return;
@@ -32,7 +34,14 @@ const Index = () => {
       <Title level={3}>
         Total discount amount: {stats?.totalDiscountAmount}
       </Title>
-      <Title level={3}>Discount codes: {stats?.discountCodes}</Title>
+      <Title level={3}>
+        Discount codes:
+        <ul>
+          {stats?.discountCodes.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </Title>
     </AppLayout>
   );
 };
