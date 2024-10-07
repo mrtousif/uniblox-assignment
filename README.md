@@ -32,6 +32,20 @@ pnpm exec nx run frontend:start
 
 4. Visit http://localhost:3000/
 
+5. To run the unit tests for backend
+
+```sh
+pnpm exec nx run backend:test
+```
+
+6. To run the unit tests for frontend
+
+```sh
+pnpm exec nx run frontend:test
+```
+
+We have [db.ts](./apps/backend/src/app/db.ts) file as database where all the products are present.
+
 ![demo](./uniblox_demo.mp4)
 
 ![unit_test](./unit_test.gif)
