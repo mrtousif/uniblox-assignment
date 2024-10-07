@@ -44,7 +44,7 @@ const DiscountForm = ({ onFinish }: Props) => {
         <InputNumber placeholder="input nth order" />
       </Form.Item>
       <Form.Item>
-        <Button type="primary" htmlType="submit">
+        <Button type="primary" htmlType="submit" data-testid="submit-button">
           Submit
         </Button>
       </Form.Item>
