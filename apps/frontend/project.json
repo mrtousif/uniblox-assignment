@@ -10,6 +10,7 @@
       "dependsOn": ["build"],
       "options": {
         "engine": "docker",
+        "push": false,
         "metadata": {
           "images": ["frontend"],
           "load": true,

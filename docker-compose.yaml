@@ -1,0 +1,29 @@
+services:
+  backend:
+    container_name: backend
+    build:
+      context: .
+      dockerfile: ./apps/backend/Dockerfile
+    restart: unless-stopped
+    ports:
+      - 4000:3000
+    networks:
+      - mynetwork
+
+  frontend:
+    container_name: frontend
+    build:
+      context: .
+      dockerfile: ./apps/frontend/Dockerfile
+    restart: unless-stopped
+    environment:
+      API_URL: http://backend:3000/api
+    ports:
+      - 3000:3000
+    networks:
+      - mynetwork
+
+
+networks:
+  mynetwork:
+    name: mynetwork
